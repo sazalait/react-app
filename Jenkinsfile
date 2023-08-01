@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    APP_DIR = '/var/www/html/hello-world' // Custom application directory
+    APP_DIR = '/var/www/html/react-app' // Custom application directory
   }
   stages {
     stage('Checkout') {
