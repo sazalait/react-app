@@ -13,7 +13,7 @@ pipeline {
     stage('Build') {
       steps {
         dir(APP_DIR) {
-          sh 'npm install'
+        //  sh 'npm install'
           sh 'npm run build'
         }
       }
