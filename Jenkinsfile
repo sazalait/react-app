@@ -6,7 +6,8 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git url: 'https://github.com/sazalait/react-app.git', branch: 'main', credentialsId: 'your-git-credentials'
+ //       git url: 'https://github.com/your-username/your-nodejs-app.git', branch: 'main', credentialsId: 'correct-git-credentials-id'
+	checkout scm
       }
     }
     stage('Build') {
