@@ -1,31 +1,21 @@
 pipeline {
-  agent {
-    any
-}
+  agent any
   environment {
-    CI = 'true'
-    HOME = '.'
-    npm_config_cache = 'npm-cache'
+    APP_DIR = '/path/to/your/nodejs/app' // Custom application directory
   }
   stages {
-    stage('Install Packages') {
+    stage('Checkout') {
       steps {
-        sh 'npm install'
+        git url: 'https://github.com/sazalait/react-app.git', branch: 'main', credentialsId: 'your-git-credentials'
       }
     }
-    stage('Test and Build') {
-      parallel {
-        stage('Run Tests') {
-          steps {
-            sh 'npm run test'
-          }
-        }
-        stage('Create Build Artifacts') {
-          steps {
-            sh 'npm run build'
-          }
+    stage('Build') {
+      steps {
+        dir(APP_DIR) {
+          sh 'npm install'
+          sh 'npm run build'
         }
       }
     }
-    }
+  }
 }
