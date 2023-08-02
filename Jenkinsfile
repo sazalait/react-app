@@ -14,7 +14,7 @@ pipeline {
       steps {
         dir(APP_DIR) {
         //  sh 'npm install'
-          sh 'npm run build'
+          sh 'sudo -u root npm run build'
         }
       }
     }
