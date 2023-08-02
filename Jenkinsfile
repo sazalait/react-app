@@ -1,5 +1,7 @@
 pipeline {
-  agent any
+  agent {
+    label 'slave-node'
+  }
   environment {
     APP_DIR = '/var/www/html/react-app' // Custom application directory
   }
@@ -14,7 +16,7 @@ pipeline {
       steps {
         dir(APP_DIR) {
         //  sh 'npm install'
-          sh 'sudo -u root npm run build'
+          sh 'npm run build'
         }
       }
     }
