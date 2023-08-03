@@ -28,7 +28,7 @@ pipeline {
 }
     stage('Move Files to Project Directory') {
       steps {
-        sh "mv /var/www/html/react-app/workspace/react-app/* ${APP_DIR}/"
+        sh "mv -f /var/www/html/react-app/workspace/react-app/* ${APP_DIR}/"
 }
 }
     stage('Build') {
