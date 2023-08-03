@@ -1,7 +1,7 @@
 pipeline {
   agent {
     label 'slave-node'
-    customWorkspace '/var/www/html/react-app'
+//    customWorkspace '/var/www/html/react-app'
   }
   environment {
     APP_DIR = '/var/www/html/react-app' // Custom application directory
