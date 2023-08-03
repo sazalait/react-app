@@ -13,6 +13,11 @@ pipeline {
 	checkout scm
       }
     }
+  stage('Run Tests') {
+      steps {
+        sh 'npm test'
+      }
+    }
     stage('Build') {
       steps {
         dir(APP_DIR) {
