@@ -12,11 +12,6 @@ pipeline {
 	checkout scm
       }
     }
-   post {
-        always {
-            archiveArtifacts artifacts: '**/*', fingerprint: true
-            // The above step archives all files in the workspace
-        }
     stage('Build') {
       steps {
         dir(APP_DIR) {
@@ -27,4 +22,4 @@ pipeline {
     }
   }
 }
-}
+
