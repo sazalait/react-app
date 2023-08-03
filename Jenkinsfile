@@ -15,6 +15,7 @@ pipeline {
     }
   stage('Run Tests') {
       steps {
+	script {
 	 if (fileExists('package.json') || fileExists('package-lock.json')) {
             // Only run npm install if there are changes
             sh 'npm install'
@@ -24,6 +25,7 @@ pipeline {
           }
       }
     }
+}
     stage('Move Files to Project Directory') {
       steps {
         sh "mv /var/www/html/react-app/workspace/react-app/* ${APP_DIR}/"
