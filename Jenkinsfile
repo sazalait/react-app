@@ -28,7 +28,7 @@ pipeline {
 }
     stage('Move Files to Project Directory') {
       steps {
-        sh "rsync -av /var/www/html/react-app/workspace/react-app/ ${APP_DIR}/"
+        sh "rsync -avz --exclude '.git' /var/www/html/react-app/workspace/react-app/ ${APP_DIR}/"
 }
 }
     stage('Build') {
