@@ -32,9 +32,20 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            echo "Pipeline finished. Cleanup or reporting can be added here."
+stage('Build') {
+    steps {
+        script {
+            echo "Running npm build inside ${USS_WORKDIR}"
+            dir("${USS_WORKDIR_SCRIPT}") {
+                sh "./build.sh ${USS_WORKDIR}"
+            }
         }
     }
+    post {
+        always {
+            archiveArtifacts artifacts: "${USS_WORKDIR}/build-reports/*.txt", onlyIfSuccessful: false
+        }
+    }
+}
+
 }
