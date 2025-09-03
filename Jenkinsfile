@@ -8,7 +8,7 @@ pipeline {
         GIT_TRACE_SETUP    = 'true'    // really cool trace tools
         USS_WORKDIR        = "/u/jenkins/test/workspace"
         USS_WORKDIR_SCRIPT = "/u/jenkins/test/scripts"
-        BUILD_REPORT       = "/u/jenkins/test"
+        BUILD_REPORT       = "/u/jenkins/test/deploydir"
         APP_DIR            = "/u/jenkins/test/deploydir"
         REPO_URL           = "https://github.com/sazalait/react-app.git"
         BRANCH             = "main"
@@ -56,6 +56,16 @@ pipeline {
                 }
             }
         }
+
+    stage('Deploy') {
+            steps {
+                script {
+                    echo "Running deploy ${USS_WORKDIR} to ${APP_DIR}"
+                        sh "rsync -avz --exclude '.git' ${USS_WORKDIR}/ ${APP_DIR}/"
+
+               }
+            }
+        }
     stage('Archive Reports') {
       steps {
          dir("${BUILD_REPORT}") {
@@ -69,16 +79,5 @@ pipeline {
      }
         
  }
-
-    stage('Deploy') {
-            steps {
-                script {
-                    echo "Running deploy ${USS_WORKDIR} to ${APP_DIR}"
-                        sh "rsync -avz --exclude '.git' ${USS_WORKDIR}/ ${APP_DIR}/"
-
-               }
-            }
-        }
-        
     }
 }
