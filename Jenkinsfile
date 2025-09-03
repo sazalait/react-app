@@ -55,8 +55,12 @@ pipeline {
     stage('Archive Reports') {
       steps {
          dir("${USS_WORKDIR}") {
-             sh "ls -l build-reports || echo 'No reports found'"
-             archiveArtifacts artifacts: "build-reports/*.txt", onlyIfSuccessful: false
+            archiveArtifacts(
+                artifacts: 'build-reports/*.log,build-reports/*.json,build-reports/*.html,build-reports/*.txt',
+                excludes: '*clist',
+                allowEmptyArchive: true,
+                onlyIfSuccessful: false
+            )
          }
      }
  }
