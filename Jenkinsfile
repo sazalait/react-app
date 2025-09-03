@@ -4,8 +4,12 @@ pipeline {
     agent { label 'webserver' }
 
     environment {
+        GIT_TRACE          = 'false'   // Trace git for testing  true/false,1,2
+        GIT_TRACE_SETUP    = 'true'    // really cool trace tools
         USS_WORKDIR        = "/u/jenkins/test/workspace"
         USS_WORKDIR_SCRIPT = "/u/jenkins/test/scripts"
+        BUILD_REPORT       = "/u/jenkins/test"
+        APP_DIR            = "/u/jenkins/test/deploydir"
         REPO_URL           = "https://github.com/sazalait/react-app.git"
         BRANCH             = "main"
     }
@@ -54,7 +58,7 @@ pipeline {
         }
     stage('Archive Reports') {
       steps {
-         dir("${USS_WORKDIR}") {
+         dir("${BUILD_REPORT}") {
             archiveArtifacts(
                 artifacts: 'build-reports/*.log,build-reports/*.json,build-reports/*.html,build-reports/*.txt',
                 excludes: '*clist',
@@ -63,7 +67,20 @@ pipeline {
             )
          }
      }
+        
  }
+
+    stage('Deply') {
+            steps {
+                script {
+                    echo "Running deploy ${USS_WORKDIR} to ${APP_DIR}"
+                        {   // Make workspace current dir
+                        sh "rsync -avz --exclude '.git' ${USS_WORKDIR}/ ${APP_DIR}/"
+
+                    }
+                }
+            }
+        }
         
     }
 }
