@@ -70,15 +70,13 @@ pipeline {
         
  }
 
-    stage('Deply') {
+    stage('Deploy') {
             steps {
                 script {
                     echo "Running deploy ${USS_WORKDIR} to ${APP_DIR}"
-                        {   // Make workspace current dir
                         sh "rsync -avz --exclude '.git' ${USS_WORKDIR}/ ${APP_DIR}/"
 
-                    }
-                }
+               }
             }
         }
         
