@@ -1,3 +1,5 @@
+def pipelineName = "CICD for React-app"
+
 pipeline {
     agent { label 'webserver' }
 
@@ -9,11 +11,20 @@ pipeline {
     }
 
     stages {
+        stage('Set Build Name') {
+            steps {
+                script {
+                    currentBuild.displayName = "${pipelineName} - #${BUILD_NUMBER}"
+                    currentBuild.description = "Branch: ${BRANCH}, Repo: ${REPO_URL}"
+                }
+            }
+        }
+
         stage('Cleanup') {
             steps {
                 script {
                     echo "Cleaning up workspace: ${USS_WORKDIR}"
-                    dir(USS_WORKDIR_SCRIPT) {
+                    dir("${USS_WORKDIR_SCRIPT}") {
                         sh "./cleanup.sh ${USS_WORKDIR}"
                     }
                 }
@@ -24,27 +35,32 @@ pipeline {
             steps {
                 script {
                     echo "Cloning repository ${REPO_URL} (branch: ${BRANCH}) into ${USS_WORKDIR}"
-                    dir(USS_WORKDIR_SCRIPT) {
+                    dir("${USS_WORKDIR_SCRIPT}") {
                         sh "./gitclone.sh -w ${USS_WORKDIR} -r ${REPO_URL} -b ${BRANCH}"
                     }
                 }
             }
         }
 
-stage('Build') {
-    steps {
-        script {
-            echo "Running npm build inside ${USS_WORKDIR}"
-            dir("${USS_WORKDIR_SCRIPT}") {
-                sh "./build.sh ${USS_WORKDIR}"
+        stage('Build') {
+            steps {
+                script {
+                    echo "Running npm build inside ${USS_WORKDIR}"
+                    dir("${USS_WORKDIR}") {   // Make workspace current dir
+                        // Pass '.' to build.sh so it writes relative to workspace
+                        sh "${USS_WORKDIR_SCRIPT}/build.sh ."
+                    }
+                }
             }
-        }
-    }
-}
-    }
-    post {
-        always {
-            archiveArtifacts artifacts: "build-reports/*.txt", onlyIfSuccessful: false
+            post {
+                always {
+                    // Debug: list reports
+                    sh "ls -l build-reports || echo 'No reports found'"
+
+                    // Archive reports relative to workspace
+                    archiveArtifacts artifacts: "build-reports/*.txt", onlyIfSuccessful: false
+                }
+            }
         }
     }
 }
