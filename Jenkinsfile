@@ -41,11 +41,11 @@ stage('Build') {
             }
         }
     }
+}
     post {
         always {
             archiveArtifacts artifacts: "${USS_WORKDIR}/build-reports/*.txt", onlyIfSuccessful: false
         }
     }
-}
 
 }
