@@ -51,16 +51,15 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                    // Debug: list reports
-                    sh "pwd"
-                    sh "ls -l build-reports || echo 'No reports found'"
-
-                    // Archive reports relative to workspace
-                    archiveArtifacts artifacts: "/u/jenkins/test/workspace/build-reports/*.txt", onlyIfSuccessful: false
-                }
-            }
         }
+    stage('Archive Reports') {
+      steps {
+         dir("${USS_WORKDIR}") {
+             sh "ls -l build-reports || echo 'No reports found'"
+             archiveArtifacts artifacts: "build-reports/*.txt", onlyIfSuccessful: false
+         }
+     }
+ }
+        
     }
 }
