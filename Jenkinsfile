@@ -1,13 +1,16 @@
 def pipelineName = "CICD for React-app"
 
 pipeline {
+    options { skipDefaultCheckout(true) }
     agent { label 'webserver' }
 
     environment {
+        GIT_TRACE       = 'false'   // Trace git for testing  true/false,1,2
+        GIT_TRACE_SETUP = 'true'    // really cool trace tools
         USS_WORKDIR        = "/u/jenkins/test/workspace"
         USS_WORKDIR_SCRIPT = "/u/jenkins/test/scripts"
         REPO_URL           = "https://github.com/sazalait/react-app.git"
-        BRANCH             = "main"
+        BRANCH             = "release"
     }
 
     stages {
@@ -51,16 +54,19 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                    // Debug: list reports
-                    sh "pwd"
-                    sh "ls -l build-reports || echo 'No reports found'"
-
-                    // Archive reports relative to workspace
-                    archiveArtifacts artifacts: "/u/jenkins/test/workspace/build-reports/*.txt", onlyIfSuccessful: false
-                }
-            }
         }
+    stage('Archive Reports') {
+      steps {
+         dir("${USS_WORKDIR}") {
+            archiveArtifacts(
+                artifacts: 'build-reports/*.log,build-reports/*.json,build-reports/*.html,build-reports/*.txt',
+                excludes: '*clist',
+                allowEmptyArchive: true,
+                onlyIfSuccessful: false
+            )
+         }
+     }
+ }
+        
     }
 }
